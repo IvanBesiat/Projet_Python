@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, request
 import sqlite3
 from flask import current_app, g
 from flask.cli import with_appcontext
@@ -41,10 +41,19 @@ app.cli.add_command(init_db_command)
     
 @app.route('/')
 def login():
-    return render_template('loginView.html')
+    error = None
+    if request.method == 'POST':
+        if valid_login(request.form['email'],
+                       request.form['password']):
+            return log_the_user_in(request.form['email'])
+        else:
+            error = 'invalid email/password'
+    return render_template('login.html', error=error)
 
-@app.route('/view')
+@app.route('/Products')
+def display():
+    return render_template('Products.html')
+
+@app.route('/Product/<name>')
 def display(name=None):
-    return render_template('displayView.html', name=name)
-
-
+    return render_template('Product.html', name=name)
