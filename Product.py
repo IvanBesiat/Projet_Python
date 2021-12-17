@@ -1,11 +1,18 @@
-from flask import (Flask, g, redirect, render_template, request, session, url_for, flash, current_app)
+from flask import (Blueprint, Flask, g, redirect, render_template, request, session, url_for, flash, current_app)
 import sqlite3
 from flask.cli import with_appcontext
 import click
+import functools
+
+from werkzeug.security import check_password_hash, generate_password_hash
+from flaskr.db import get_db
+bp = Blueprint('auth', __name__, url_prefix='auth')
+
 
 
 app = Flask(__name__)
 
+# Creating connection with SQLite db
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -16,6 +23,7 @@ def get_db():
 
     return g.db
 
+# add Python functions that will run these SQL commands
 def init_db():
     db = get_db()
 
@@ -29,13 +37,16 @@ def init_db_command():
     init_db()
     click.echo('Initialized the database.')
 
+# closed after the work is finished
 def close_db(e=None):
     db = g.pop('db', None)
 
     if db is not None:
         db.close()
 
+# call that function
 app.teardown_appcontext(close_db)
+# adds a new command that can be called with the flask command
 app.cli.add_command(init_db_command)
     
 @app.route('/')
