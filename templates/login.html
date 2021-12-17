@@ -5,22 +5,13 @@
         Login
     </h3>
     <form class="form-signin" method="post">
-        <div class="mb-3">
-            <label for="username">username</label>
-            <input id="username" name="username" placeholder="username">
-        </div>
-        <div class="mb-3">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password">
-        </div>
-        <div class="row col-4 mx-auto">
-            <button
-            type="submit"
-            class="btn btn-primary btn-lg"
-            [disabled]="signInForm.invalid" >
+        <label for="username">username</label>
+        <input name="username" placeholder="username">
+        <label for="password">Password</label>
+        <input type="password" name="password" placeholder="Password">
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="signInForm.invalid" >
             Login
-            </button>
-        </div>
+        </button>
     </form>
 </div>      
 
