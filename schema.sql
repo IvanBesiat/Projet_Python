@@ -13,3 +13,10 @@ CREATE TABLE products (
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   Status BOOLEAN NOT NULL
 );
+
+insert into [user]
+  (username,password) 
+values  
+  ('ivan','Besiat')
+  ,('baptiste','Ivaldi')
+  ,('anny','Barrero');

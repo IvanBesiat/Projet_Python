@@ -1,5 +1,7 @@
-from flask import (Flask, g, redirect, render_template, request, session, url_for, flash, current_app)
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import sqlite3
+from werkzeug.security import check_password_hash
+from flask import current_app, g
 from flask.cli import with_appcontext
 import click
 
@@ -42,12 +44,12 @@ app.cli.add_command(init_db_command)
 def login():
     error = None
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         password = request.form['password']
         db = get_db()
         error = None
         user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (email,)
+            'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
 
         if user is None:
@@ -62,12 +64,12 @@ def login():
 
         flash(error)
 
-    return render_template('auth/login.html')
+    return render_template('login.html')
 
 @app.route('/Products')
 def display():
     return render_template('Products.html')
 
 @app.route('/Product/<name>')
-def display(name=None):
+def displayOne(name=None):
     return render_template('Product.html', name=name)
