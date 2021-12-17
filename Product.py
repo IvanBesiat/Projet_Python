@@ -41,6 +41,7 @@ app.teardown_appcontext(close_db)
 app.cli.add_command(init_db_command)
     
 @app.route('/')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
@@ -50,8 +51,8 @@ def login():
         error = None
         user = db.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
-
+        ).fetchone() 
+        
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
@@ -60,16 +61,20 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            return redirect(url_for(url_for('products')))
 
         flash(error)
 
     return render_template('login.html')
 
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
 @app.route('/Products')
-def display():
+def products():
     return render_template('Products.html')
 
 @app.route('/Product/<name>')
-def displayOne(name=None):
+def product(name=None):
     return render_template('Product.html', name=name)

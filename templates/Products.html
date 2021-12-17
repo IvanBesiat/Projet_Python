@@ -1,6 +1,5 @@
-<h1 class="text-uppercase text-center">
-    Floro's Shop
-  </h1>
+{% extends 'masterPage.html' %}
+{% block header %}
   <div class="m-4 text-center">
     <div>
       <app-add-button>
@@ -20,6 +19,8 @@
     </button>
   
   </div>
+{% endblock %}
+{% block content %}
   <div class="m-4">
     <table class="table">
         <thead >
@@ -43,4 +44,4 @@
       </table>
       
   </div>
-  
+{% endblock %}
