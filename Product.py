@@ -49,8 +49,14 @@ app.teardown_appcontext(close_db)
 # adds a new command that can be called with the flask command
 app.cli.add_command(init_db_command)
     
+    # Function login for the application
 @app.route('/login', methods=['GET', 'POST'] )
 def login():
+    #  Login or Register.
+    # Powered by Flask-Login.
+    # Error message is sent to connection page in case of wrong password or
+    # in case of already existing user.
+    # 
     error = None
     if request.method == 'POST':
         email =  request.form['email']
@@ -76,6 +82,7 @@ def login():
 
     return render_template('auth/login.html')
 
+# call the function logout and close the session
 @app.route('/logout')
 def logout():
     """deconnection and clear session"""
