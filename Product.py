@@ -75,11 +75,13 @@ def login():
         flash(error)
 
     return render_template('auth/login.html')
-@app.route('/login')
+
+@app.route('/logout')
 def logout():
     """deconnection and clear session"""
     session.clear()
     return render_template('login.html')
+
 
 @app.route('/Products')
 def display():
