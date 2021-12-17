@@ -49,12 +49,12 @@ app.teardown_appcontext(close_db)
 # adds a new command that can be called with the flask command
 app.cli.add_command(init_db_command)
     
-@app.route('/')
+@app.route('/login', methods=['GET', 'POST'] )
 def login():
     error = None
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email =  request.form['email']
+        password = generate_password_hash(request.form['password'])
         db = get_db()
         error = None
         user = db.execute(
@@ -69,11 +69,17 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
+
             return redirect(url_for('index'))
 
         flash(error)
 
     return render_template('auth/login.html')
+@app.route('/login')
+def logout():
+    """deconnection and clear session"""
+    session.clear()
+    return render_template('login.html')
 
 @app.route('/Products')
 def display():
