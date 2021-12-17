@@ -5,10 +5,10 @@
         Login
     </h3>
     <form class="form-signin" method="post">
-        <label for="username">username</label>
-        <input name="username" placeholder="username">
+        <label for="username">Username</label>
+        <input name="username" placeholder="username" required>
         <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Password">
+        <input type="password" name="password" placeholder="Password" required>
         <button type="submit" class="btn btn-primary btn-lg" [disabled]="signInForm.invalid" >
             Login
         </button>

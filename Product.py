@@ -1,3 +1,4 @@
+from typing import Counter
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 import sqlite3
 from werkzeug.security import check_password_hash
@@ -39,31 +40,30 @@ def close_db(e=None):
 
 app.teardown_appcontext(close_db)
 app.cli.add_command(init_db_command)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     
-@app.route('/')
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=('GET', 'POST'))
+@app.route('/login', methods=('GET', 'POST'))
 def login():
     error = None
     if request.method == 'POST':
         username = request.form['username']
-        # password = request.form['password']
-        # db = get_db()
-        # error = None
-        # user = db.execute(
-        #     'SELECT * FROM user WHERE username = ?', (username,)
-        # ).fetchone() 
+        password = request.form['password']
+        db = get_db()
+        error = None
+        user = db.execute('SELECT * FROM user WHERE username = ?', (username,)).fetchone() 
         
-        # if user is None:
-        #     error = 'Incorrect username.'
-        # elif not check_password_hash(user['password'], password):
-        #     error = 'Incorrect password.'
+        if user is None:
+            error = 'Incorrect username.'
+        elif not check_password_hash(user['password'], password):
+            error = 'Incorrect password.'
+            
+        if error is None:
+            session.clear()
+            session['user_id'] = user['id']
+            return redirect(url_for('products'))
 
-        # if error is None:
-        #     session.clear()
-        #     session['user_id'] = user['id']
-        #     return redirect(url_for(url_for('products')))
-
-        # flash(error)
+        flash(error)
 
     return render_template('login.html')
 
@@ -71,10 +71,13 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route('/Products')
+@app.route('/Products', methods=('GET', 'POST'))
 def products():
-    return render_template('Products.html')
+    db = get_db()
+    products = db.execute('SELECT * FROM products').fetchall()
+    print(products)
+    return render_template('Products.html', products=products)
 
-@app.route('/Product/<name>')
+@app.route('/Product/<name>', methods=('GET', 'POST'))
 def product(name=None):
     return render_template('Product.html', name=name)
