@@ -1,3 +1,4 @@
+from werkzeug.exceptions import abort
 from typing import Counter
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 import sqlite3
@@ -82,10 +83,14 @@ def logout():
 @app.route('/Products', methods=('GET', 'POST'))
 def products():
     db = get_db()
-    products = db.execute('SELECT * FROM products').fetchall()
-    print(products)
+    products = db.execute('SELECT * FROM products;').fetchall()
     return render_template('Products.html', products=products)
 
 @app.route('/Product/<name>', methods=('GET', 'POST'))
-def product(name=None):
-    return render_template('Product.html', name=name)
+def product(name):
+    db = get_db()
+    product = db.execute('SELECT * FROM products WHERE Name = ?',(name,)).fetchone()
+    if product is None:
+        abort(404, f"Product name {name} doesn't exist.")
+    print(product)
+    return render_template('Product.html', product=product)

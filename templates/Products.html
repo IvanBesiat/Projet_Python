@@ -1,12 +1,7 @@
 {% extends 'masterPage.html' %}
 {% block header %}
   <div class="m-4 text-center">
-    <div>
-      <app-add-button>
-  
-      </app-add-button>
-    </div>
-    <div>Switch all product to:</div>
+    <!-- <div>Switch all product to:</div>
     <button
     class="btn btn-primary"
     >
@@ -16,7 +11,7 @@
     class="mx-2 btn btn-primary"
     >
     All in stock
-    </button>
+    </button> -->
     <a href="{{ url_for('login')}}" title="logout">Logout</a>
   </div>
 {% endblock %}
@@ -34,9 +29,10 @@
         <tbody>
           {% for product in products %}
             <tr>
-              <td>{{product[Id]}}</td>
-              <td>{{product[Name]}}</td>
-              <td>{{product[Status]}}</td>
+              <td>{{product['Id']}}</td>
+              <td>{{product['Name']}}</td>
+              <td>{{product['Status']}}</td>
+              <td><a class="btn btn-outline-dark" href="{{ url_for('product',name=product['Name'])}}" title="product">Details</a></td>
             </tr>
           {% endfor%}
         </tbody>

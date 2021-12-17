@@ -9,8 +9,8 @@ CREATE TABLE user (
 
 CREATE TABLE products (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  Name varchar(50) NOT NULL,
-  Status BOOLEAN NOT NULL
+  Name varchar NOT NULL,
+  Status varchar NOT NULL
 );
 
 insert into user
@@ -21,7 +21,7 @@ values
   ,('anny','pbkdf2:sha256:260000$elKoe3GB3E2L4AJt$31af904e5244231e893733c4d29c18ab26386a8268465d5e0fabcdd8d7ed3c2c');
 
 insert into products
-  (Name,created,Status)
+  (Name,Status)
 values
   ("rose","En Stock")
   ,("Tulipe","Pas en Stock")
