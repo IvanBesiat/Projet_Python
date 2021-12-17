@@ -44,13 +44,13 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     
 # Function login for the application
 @app.route('/', methods=('GET', 'POST'))
-@app.route('/login', methods=['GET', 'POST'] )
+@app.route('/login', methods=('GET', 'POST'))
 def login():
     #  Login or Register.
     # Powered by Flask-Login.
     # Error message is sent to connection page in case of wrong password or
     # in case of already existing user.
-    
+    # 
     error = None
     if request.method == 'POST':
         username = request.form['username']
@@ -70,6 +70,8 @@ def login():
             return redirect(url_for('products'))
 
         flash(error)
+
+    return render_template('auth/login.html')
 
 # call the function logout and close the session
 def logout():
