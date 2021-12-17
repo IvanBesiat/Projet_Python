@@ -71,7 +71,7 @@ def login():
 
         flash(error)
 
-    return render_template('auth/login.html')
+    return render_template('login.html')
 
 # call the function logout and close the session
 def logout():
