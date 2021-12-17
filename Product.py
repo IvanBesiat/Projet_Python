@@ -1,6 +1,5 @@
-from flask import Flask, render_template, url_for, request
+from flask import (Flask, g, redirect, render_template, request, session, url_for, flash, current_app)
 import sqlite3
-from flask import current_app, g
 from flask.cli import with_appcontext
 import click
 
@@ -43,12 +42,27 @@ app.cli.add_command(init_db_command)
 def login():
     error = None
     if request.method == 'POST':
-        if valid_login(request.form['email'],
-                       request.form['password']):
-            return log_the_user_in(request.form['email'])
-        else:
-            error = 'invalid email/password'
-    return render_template('login.html', error=error)
+        email = request.form['email']
+        password = request.form['password']
+        db = get_db()
+        error = None
+        user = db.execute(
+            'SELECT * FROM user WHERE username = ?', (email,)
+        ).fetchone()
+
+        if user is None:
+            error = 'Incorrect username.'
+        elif not check_password_hash(user['password'], password):
+            error = 'Incorrect password.'
+
+        if error is None:
+            session.clear()
+            session['user_id'] = user['id']
+            return redirect(url_for('index'))
+
+        flash(error)
+
+    return render_template('auth/login.html')
 
 @app.route('/Products')
 def display():
